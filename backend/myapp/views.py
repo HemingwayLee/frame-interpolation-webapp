@@ -47,12 +47,12 @@ def add_projs(request, folder):
         
         command = [
             "python3",
-            "-m",
-            "eval.interpolator_cli",
+            # "-m",
+            "/home/app/backend/myapp/eval/interpolator_cli.py",
             "--pattern",
             path,
             "--model_path",
-            f'{settings.MEDIA_ROOT}/models/film_net/Style/saved_model/'
+            f'{settings.MEDIA_ROOT}/models/film_net/Style/saved_model',
             "--times_to_interpolate",
             "5",
             "--output_video"

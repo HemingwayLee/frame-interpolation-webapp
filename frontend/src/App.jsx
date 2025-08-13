@@ -179,44 +179,52 @@ export default function Dashboard() {
           </Grid>
           <Grid item xs={12}>
             <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-              <table>
-                <thead>
-                  <tr>
-                    <td>Begin</td>
-                    <td>End</td>
-                    <td>Result Video</td>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>
-                      {
-                        isResultReady && (
-                          <img 
-                            src={`media/projs/${selectedImg}/img_begin.jpg`} 
-                            width={imgDim.width} 
-                            height={imgDim.height}
-                          />
-                        )
-                      }
-                    </td>
-                    <td>
-                      {
-                        isResultReady && (
-                          <img 
-                            src={`media/projs/${selectedImg}/img_end.jpg`} 
-                            width={imgDim.width} 
-                            height={imgDim.height}
-                          />
-                        )
-                      }
-                    </td>
-                    <td>
-                      
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+              <div style={{ overflowX: 'auto' }}>
+                <table>
+                  <thead>
+                    <tr>
+                      <td>Begin</td>
+                      <td>End</td>
+                      <td>Result Video</td>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        {
+                          isResultReady && (
+                            <img 
+                              src={`media/projs/${selectedImg}/img_begin.jpg`} 
+                              width={imgDim.width} 
+                              height={imgDim.height}
+                            />
+                          )
+                        }
+                      </td>
+                      <td>
+                        {
+                          isResultReady && (
+                            <img 
+                              src={`media/projs/${selectedImg}/img_end.jpg`} 
+                              width={imgDim.width} 
+                              height={imgDim.height}
+                            />
+                          )
+                        }
+                      </td>
+                      <td>
+                        {
+                          isResultReady && (
+                            <video controls autoplay>
+                              <source src={`media/projs/${selectedImg}/interpolated.mp4`} type="video/mp4" />
+                            </video>
+                          )
+                        }
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </Paper>
           </Grid>
         </Grid>
