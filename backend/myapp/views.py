@@ -1,38 +1,69 @@
-import uuid
-import random
-import decimal
-from time import sleep
+import os
+import json
+import base64
+import subprocess
+import traceback
+from PIL import Image, ImageOps
+from io import BytesIO
+from django.conf import settings
 from django.http import JsonResponse
-from django.db import connection
-from .models import Person
+from django.views.decorators.http import require_http_methods
+from django.views.decorators.csrf import csrf_exempt
+from django.core.files.storage import FileSystemStorage
 
-def insert(request):
-    for i in range(random.randint(10, 50)):
-        sleep(decimal.Decimal(random.randrange(50, 300))/1000)
+@require_http_methods(["GET"])
+def list_projects(request):
+    directories = []
+    try:
+        path = f'{settings.MEDIA_ROOT}/projs'
+        for entry in os.listdir(path):
+            full_path = os.path.join(path, entry)
+            if os.path.isdir(full_path):
+                directories.append(entry)
+    except:
+        print(traceback.format_exc())
+        
+    return JsonResponse({"results": directories})
 
-        p = Person(
-            fname=uuid.uuid4().hex[:16], 
-            lname=uuid.uuid4().hex[:16], 
-            age=random.randint(10, 60))
-        p.save()
 
-    return JsonResponse({"result": "created!"})
+@csrf_exempt
+@require_http_methods(["POST"])
+def add_projs(request, folder):
+    path = f'{settings.MEDIA_ROOT}/projs/{folder}'
+    if os.path.isdir(path):
+        return JsonResponse({"result": "folder exist"})
+    
+    uploadedBeginFile = request.FILES['beginFile'] if 'beginFile' in request.FILES else False
+    uploadedEndFile = request.FILES['endFile'] if 'endFile' in request.FILES else False
+    if uploadedBeginFile and uploadedEndFile:
+        os.makedirs(path, exist_ok=True)
+
+        fss = FileSystemStorage(location=path)
+        filename = fss.save(uploadedBeginFile.name, uploadedBeginFile)
+        print(f"save... {filename}")
+
+        filename = fss.save(uploadedEndFile.name, uploadedEndFile)
+        print(f"save... {filename}")
+        
+        command = [
+            "python3",
+            "-m",
+            "eval.interpolator_cli",
+            "--pattern",
+            path,
+            "--model_path",
+            f'{settings.MEDIA_ROOT}/models/film_net/Style/saved_model/'
+            "--times_to_interpolate",
+            "5",
+            "--output_video"
+        ]
+        subprocess.run(command, check=True)
+
+        return JsonResponse({"result": "success"})
 
 
-def display(request, page, size):
-    limit = size
-    offset = page*size
-    person = Person.objects.order_by("id")[offset:offset+limit]
-    if person.exists():
-        res = []
-        for val in person.values("id", "fname", "lname", "age"):
-            res.append({
-                "id": val["id"],
-                "fname": val["fname"],
-                "lname": val["lname"],
-                "age": val["age"]
-            })
+@require_http_methods(["GET"])
+def ping_proj(request, folder):
+    
 
-        return JsonResponse({"total": Person.objects.count(), "data": res}) 
-    else:
-        return JsonResponse({"total": Person.objects.count()})
+    return JsonResponse({"result": "success"})
