@@ -4,7 +4,7 @@
 
 
 # How to run
-* Download pre-trained TF2 Saved Models from [google drive](https://drive.google.com/drive/folders/1q8110-qp225asX3DQvZnfLfJPkCHmDpy?usp=sharing) and put into `/<root>/backend/media/models`
+* Download pre-trained TF2 Saved Models from [s3](https://my-inhouse-models.s3.ap-northeast-1.amazonaws.com/frame_interpolation_models.zip) and put into `/<root>/backend/media/models`
 
 * The downloaded folder should have the following structure:
 
