@@ -4,12 +4,29 @@
 
 
 # How to run
+* Download pre-trained TF2 Saved Models from [google drive](https://drive.google.com/drive/folders/1q8110-qp225asX3DQvZnfLfJPkCHmDpy?usp=sharing) and put into `/<root>/backend/media/models`
+
+* The downloaded folder should have the following structure:
+
+```
+/home/app/backend/media/models
+├── film_net/
+│   ├── L1/
+│   ├── Style/
+│   ├── VGG/
+├── vgg/
+│   ├── imagenet-vgg-verydeep-19.mat
+```
+
+* Run by docker
 ```
 docker-compose build
 docker-compose up
 ```
 
 * Open browser and access `http://localhost:3000`
+
+
 
 # Note
 * How to run interpolation algorithm
